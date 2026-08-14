@@ -2461,7 +2461,7 @@ for(let i=0;i<90;i++){
 ======================================================= -->
 <nav>
 <div class="nav-logo">
-<img alt="LDP" src="ldp-logo.jpg"/>
+<img alt="LDP" src="ldp-logo.jpg" loading="lazy" decoding="async"/>
 <div class="nav-name">
 
             LDP
@@ -2856,10 +2856,15 @@ function createFirework(){
 }
 
 
-setInterval(
-    createFirework,
-    2500
-);
+if (
+    !window.matchMedia("(max-width:600px)").matches &&
+    !window.matchMedia("(prefers-reduced-motion: reduce)").matches
+){
+    setInterval(
+        createFirework,
+        2500
+    );
+}
 
 </script>
 <script id="ldp-loader-hard-fix">
@@ -2895,12 +2900,12 @@ setInterval(
       Jalankan berdasarkan waktu, bukan window.onload.
       Ini sengaja agar loading TIDAK bergantung pada gambar.
     */
-    setTimeout(releaseLDP, 2800);
+    setTimeout(releaseLDP, 1400);
 
     /*
       Pengaman terakhir.
     */
-    setTimeout(releaseLDP, 4500);
+    setTimeout(releaseLDP, 2600);
 
 })();
 </script>
@@ -2956,7 +2961,7 @@ setInterval(
   </div>
 </div>
 </div>
-<img alt="Robot LDP" class="hero-robot" src="robot-logo.png"/>
+<img alt="Robot LDP" class="hero-robot" src="robot-logo.png" loading="lazy" decoding="async"/>
 </section><section class="ldp-final-packages ldp-package-only" id="ldpStage5">
   <div class="ldp-package-header">
     <div class="ldp-package-kicker">🇮🇩 PILIH PAKET INTERNET LDP</div>
@@ -3882,7 +3887,7 @@ setInterval(
 </section><footer>
 <div class="footer-grid">
 <div class="footer-brand">
-<img alt="LDP" class="footer-logo" src="ldp-logo.jpg"/>
+<img alt="LDP" class="footer-logo" src="ldp-logo.jpg" loading="lazy" decoding="async"/>
 <h3>
                 PT. LINTAS DATA PRIMA
             </h3>
@@ -3969,6 +3974,254 @@ setInterval(
       });
     });
   });
+})();
+</script>
+
+
+<!-- =========================================================
+     LDP SMART PERFORMANCE ENGINE
+     - Auto Lite Mode untuk HP / perangkat lemah
+     - Pause animasi saat section keluar layar
+     - Deteksi koneksi hemat data / lambat
+     - Lazy-load gambar non-kritis
+     - Mengurangi blur/filter/box-shadow berat di perangkat lemah
+     - Tidak mengubah desain desktop
+========================================================= -->
+<style id="LDP-SMART-PERFORMANCE">
+/* Desktop tetap premium. Optimasi aktif adaptif di bawah. */
+.ldp-perf-paused,
+.ldp-perf-paused *{
+    animation-play-state:paused !important;
+}
+
+/* Browser diberi petunjuk bahwa elemen berat boleh diisolasi. */
+#ldpStage2,
+#ldpStage3,
+#ldpStage4,
+#ldpStage5,
+#ldpStage6,
+#promo,
+#kecepatan{
+    contain:layout paint style;
+}
+
+/* HP: kurangi biaya visual, bukan menghilangkan isi. */
+@media (max-width:600px){
+    body::before{
+        display:none !important;
+    }
+
+    nav{
+        backdrop-filter:none !important;
+        -webkit-backdrop-filter:none !important;
+        background:rgba(5,3,8,.96) !important;
+    }
+
+    .hero,
+    .promo,
+    #ldpStage5.ldp-package-only{
+        background-image:none !important;
+    }
+
+    .package::before,
+    #ldpStage5 .ldp-new-card::before{
+        filter:none !important;
+        opacity:.10 !important;
+    }
+
+    .loader-grid,
+    .loader-orbit,
+    .loader-glow{
+        animation:none !important;
+    }
+
+    .hero-robot,
+    .about-robot{
+        filter:none !important;
+    }
+
+    /* Matikan hanya dekorasi yang tidak penting di HP. */
+    .firework,
+    .particle,
+    .spark,
+    .sparkle,
+    .confetti{
+        display:none !important;
+    }
+}
+
+/* Perangkat sangat kecil / hemat daya. */
+@media (max-width:400px){
+    section{
+        padding-top:65px !important;
+        padding-bottom:65px !important;
+    }
+
+    .hero-robot{
+        display:none !important;
+    }
+
+    .hero h1{
+        font-size:46px !important;
+    }
+
+    .hero-text{
+        font-size:14px !important;
+    }
+
+    .package,
+    .feature,
+    .service,
+    .event-card,
+    .contact-card,
+    #ldpStage5 .ldp-new-card{
+        box-shadow:0 8px 24px rgba(0,0,0,.22) !important;
+    }
+}
+
+/* Sistem pengguna meminta minim animasi. */
+@media (prefers-reduced-motion:reduce){
+    *,
+    *::before,
+    *::after{
+        animation-duration:.001ms !important;
+        animation-iteration-count:1 !important;
+        transition-duration:.001ms !important;
+        scroll-behavior:auto !important;
+    }
+}
+</style>
+
+<script id="LDP-SMART-PERFORMANCE-JS">
+(function(){
+    "use strict";
+
+    const root = document.documentElement;
+    const body = document.body;
+
+    const mobile = window.matchMedia("(max-width:600px)");
+    const tiny = window.matchMedia("(max-width:400px)");
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+    /* Koneksi lambat / mode hemat data */
+    let slowNetwork = false;
+    try{
+        const c = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+        if(c){
+            slowNetwork =
+                c.saveData === true ||
+                /(^|-)2g$|slow-2g/i.test(c.effectiveType || "") ||
+                Number(c.downlink || 99) < 1.5;
+        }
+    }catch(e){}
+
+    const lite = mobile.matches || tiny.matches || reduced.matches || slowNetwork;
+
+    if(lite){
+        root.classList.add("ldp-lite-mode");
+        body.classList.add("ldp-lite-mode");
+    }
+
+    /* Lazy-load gambar yang belum punya atribut loading. */
+    document.querySelectorAll("img").forEach(function(img){
+        if(!img.hasAttribute("decoding")){
+            img.setAttribute("decoding","async");
+        }
+
+        const cls = img.className || "";
+        const critical = img.classList.contains("loader-robot");
+        if(!critical && !img.hasAttribute("loading")){
+            img.setAttribute("loading","lazy");
+        }
+    });
+
+    /*
+      Pause animasi section berat ketika tidak terlihat.
+      IntersectionObserver jauh lebih ringan daripada loop scroll.
+    */
+    if("IntersectionObserver" in window){
+        const heavySelectors = [
+            "#ldpStage2",
+            "#ldpStage3",
+            "#ldpStage4",
+            "#ldpStage5",
+            "#ldpStage6",
+            "#promo"
+        ];
+
+        const targets = [];
+        heavySelectors.forEach(function(sel){
+            document.querySelectorAll(sel).forEach(function(el){
+                targets.push(el);
+            });
+        });
+
+        if(targets.length){
+            const observer = new IntersectionObserver(function(entries){
+                entries.forEach(function(entry){
+                    if(entry.isIntersecting){
+                        entry.target.classList.remove("ldp-perf-paused");
+                    }else{
+                        entry.target.classList.add("ldp-perf-paused");
+                    }
+                });
+            },{
+                root:null,
+                rootMargin:"120px 0px",
+                threshold:0
+            });
+
+            targets.forEach(function(el){ observer.observe(el); });
+        }
+    }
+
+    /*
+      Matikan dekorasi mahal pada HP / koneksi lambat.
+      Ini dilakukan sekali, bukan terus-menerus.
+    */
+    if(lite){
+        const selectors = [
+            ".loader-orbit",
+            ".loader-glow",
+            ".ldp3-radar",
+            ".ldp-network-scan",
+            ".ldp3-route",
+            ".ldp3-island"
+        ];
+
+        selectors.forEach(function(sel){
+            document.querySelectorAll(sel).forEach(function(el){
+                el.style.animation = "none";
+                if(mobile.matches || slowNetwork){
+                    el.style.filter = "none";
+                }
+            });
+        });
+
+        /* Hapus elemen dekoratif yang terlanjur dibuat script lama. */
+        document.querySelectorAll(
+            ".firework,.particle,.spark,.sparkle,.confetti"
+        ).forEach(function(el){
+            el.remove();
+        });
+    }
+
+    /* Tidak perlu memanggil fungsi berat setiap resize. */
+    let resizeTimer = 0;
+    window.addEventListener("resize",function(){
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(function(){
+            if(mobile.matches){
+                root.classList.add("ldp-lite-mode");
+                body.classList.add("ldp-lite-mode");
+            }
+        },250);
+    },{passive:true});
+
+    console.log(
+        "%c LDP SMART PERFORMANCE ACTIVE ",
+        "background:#7c22ff;color:#fff;font-weight:bold;padding:7px 12px;border-radius:7px;"
+    );
 })();
 </script>
 
@@ -26536,3 +26789,1455 @@ a[href*="whatsapp"],
 }
 
 </style>
+
+<!-- =====================================================
+     LDP FIX — BLOK TOMBOL BACK TO TOP LAMA
+     Tombol baru #ldpBackTop tetap aktif
+===================================================== -->
+
+<style id="ldp-hide-old-top-button">
+
+    /* MATIKAN TOMBOL NAIK LAMA */
+    .top-button,
+    #topButton {
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        pointer-events: none !important;
+    }
+
+</style>
+
+<script>
+(function(){
+
+    function blockOldTopButton(){
+
+        const oldButtons = document.querySelectorAll(
+            ".top-button, #topButton"
+        );
+
+        oldButtons.forEach(function(button){
+
+            button.style.setProperty(
+                "display",
+                "none",
+                "important"
+            );
+
+            button.style.setProperty(
+                "visibility",
+                "hidden",
+                "important"
+            );
+
+            button.style.setProperty(
+                "opacity",
+                "0",
+                "important"
+            );
+
+            button.style.setProperty(
+                "pointer-events",
+                "none",
+                "important"
+            );
+
+        });
+
+    }
+
+    /* Jalankan saat halaman siap */
+    if(document.readyState === "loading"){
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            blockOldTopButton
+        );
+
+    }else{
+
+        blockOldTopButton();
+
+    }
+
+    /* Pengaman kalau script lama membuat tombol lagi */
+    const observer = new MutationObserver(function(){
+
+        blockOldTopButton();
+
+    });
+
+    observer.observe(
+        document.body,
+        {
+            childList:true,
+            subtree:true
+        }
+    );
+
+})();
+</script>
+
+<!-- =========================================================
+     LDP STAGE 3 — MOBILE FIX V5
+     COVERAGE + AREA ONLINE
+     TEMPel PALING BAWAH index.html
+========================================================= -->
+
+<style id="ldp-stage3-mobile-fix-v5">
+
+/* =========================================================
+   AREA ONLINE BAR
+========================================================= */
+
+#ldpAreaOnlineV5{
+    position:relative;
+    z-index:50;
+
+    width:100%;
+    max-width:1250px;
+
+    margin:0 auto 18px;
+    padding:11px 15px;
+
+    box-sizing:border-box;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:8px;
+
+    border:1px solid rgba(25,237,120,.13);
+    border-radius:14px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(25,237,120,.055),
+            rgba(124,34,255,.07)
+        );
+
+    box-shadow:
+        0 12px 30px rgba(0,0,0,.20),
+        inset 0 1px 0 rgba(255,255,255,.04);
+
+    color:#fff;
+
+    font-size:9px;
+    font-weight:1000;
+    letter-spacing:.9px;
+
+    backdrop-filter:blur(12px);
+    -webkit-backdrop-filter:blur(12px);
+}
+
+#ldpAreaOnlineV5 .online{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+
+    color:#19ed78;
+}
+
+#ldpAreaOnlineV5 .dot{
+    width:7px;
+    height:7px;
+    flex:0 0 7px;
+
+    border-radius:50%;
+
+    background:#19ed78;
+
+    box-shadow:
+        0 0 8px rgba(25,237,120,.9),
+        0 0 18px rgba(25,237,120,.4);
+
+    animation:
+        ldpAreaOnlinePulseV5
+        1.7s ease-in-out infinite;
+}
+
+@keyframes ldpAreaOnlinePulseV5{
+
+    0%,100%{
+        transform:scale(.8);
+        opacity:.55;
+    }
+
+    50%{
+        transform:scale(1.15);
+        opacity:1;
+    }
+
+}
+
+#ldpAreaOnlineV5 .sep{
+    color:rgba(255,255,255,.18);
+}
+
+#ldpAreaOnlineV5 .city{
+    color:rgba(255,255,255,.82);
+}
+
+#ldpAreaOnlineV5 .city.highlight{
+    color:#fff;
+
+    text-shadow:
+        0 0 12px rgba(124,34,255,.55);
+}
+
+#ldpAreaOnlineV5 .region{
+    color:#a866ff;
+}
+
+
+/* =========================================================
+   STAGE 3 — MOBILE CLEAN
+========================================================= */
+
+@media(max-width:600px){
+
+    #ldpStage3{
+
+        width:100% !important;
+        max-width:100% !important;
+
+        box-sizing:border-box !important;
+
+        overflow:hidden !important;
+
+        padding:
+            42px
+            10px
+            55px !important;
+    }
+
+
+    /* HEADER */
+
+    #ldpStage3 .ldp3-header{
+
+        width:100% !important;
+
+        max-width:100% !important;
+
+        box-sizing:border-box;
+
+        margin:
+            0
+            auto
+            24px !important;
+
+        padding:
+            0
+            4px;
+    }
+
+
+    #ldpStage3 .ldp3-header h2{
+
+        max-width:100%;
+
+        font-size:
+            clamp(
+                28px,
+                9vw,
+                38px
+            ) !important;
+
+        line-height:1.02;
+
+        letter-spacing:-1.5px !important;
+
+        overflow-wrap:break-word;
+    }
+
+
+    #ldpStage3 .ldp3-header p{
+
+        max-width:330px;
+
+        margin-left:auto;
+        margin-right:auto;
+
+        font-size:11px !important;
+
+        line-height:1.65;
+    }
+
+
+    /* AREA BAR */
+
+    #ldpAreaOnlineV5{
+
+        width:
+            calc(100% - 4px);
+
+        margin:
+            0
+            auto
+            15px;
+
+        padding:
+            10px 8px;
+
+        gap:6px;
+
+        font-size:7.5px;
+
+        letter-spacing:.55px;
+
+        border-radius:12px;
+    }
+
+
+    #ldpAreaOnlineV5 .dot{
+
+        width:6px;
+        height:6px;
+        flex-basis:6px;
+    }
+
+
+    /* =====================================================
+       MAP
+    ===================================================== */
+
+    #ldpStage3 .ldp3-layout{
+
+        width:100% !important;
+
+        max-width:100% !important;
+
+        display:flex !important;
+
+        flex-direction:column !important;
+
+        gap:14px !important;
+    }
+
+
+    #ldpStage3 .ldp3-map{
+
+        width:100% !important;
+
+        max-width:100% !important;
+
+        min-height:305px !important;
+
+        height:305px !important;
+
+        box-sizing:border-box !important;
+
+        border-radius:22px !important;
+
+        overflow:hidden !important;
+
+        order:1 !important;
+    }
+
+
+    /* MAP LABEL */
+
+    #ldpStage3 .ldp3-map-label{
+
+        top:15px !important;
+
+        left:15px !important;
+    }
+
+
+    #ldpStage3 .ldp3-map-label small{
+
+        font-size:6px !important;
+
+        letter-spacing:1px;
+    }
+
+
+    #ldpStage3 .ldp3-map-label strong{
+
+        font-size:13px !important;
+    }
+
+
+    /* =====================================================
+       SVG MAP
+    ===================================================== */
+
+    #ldpStage3 .ldp3-indonesia{
+
+        left:-4% !important;
+
+        top:12% !important;
+
+        width:108% !important;
+
+        height:76% !important;
+
+        max-width:none !important;
+
+        overflow:visible !important;
+    }
+
+
+    /* =====================================================
+       NODE LEBIH KECIL
+    ===================================================== */
+
+    #ldpStage3 .ldp3-node{
+
+        width:9px !important;
+
+        height:9px !important;
+
+        border-width:2px !important;
+
+        box-shadow:
+            0 0 7px #fff,
+            0 0 16px #8b43ff !important;
+    }
+
+
+    #ldpStage3 .ldp3-node::before{
+
+        inset:-5px !important;
+
+    }
+
+
+    /* LABEL NODE */
+
+    #ldpStage3 .ldp3-node-label{
+
+        top:13px !important;
+
+        padding:
+            3px
+            5px !important;
+
+        border-radius:5px !important;
+
+        font-size:5.5px !important;
+
+        line-height:1.1;
+
+        letter-spacing:.3px !important;
+
+        white-space:nowrap !important;
+
+        max-width:75px;
+
+        overflow:hidden;
+
+        text-overflow:ellipsis;
+
+        background:
+            rgba(7,4,12,.92) !important;
+    }
+
+
+    /* NODE BARU */
+
+    #ldpStage3
+    .ldp3-location-new{
+
+        width:9px !important;
+
+        height:9px !important;
+
+    }
+
+
+    #ldpStage3
+    .ldp3-location-new
+    .ldp3-node-label{
+
+        top:13px !important;
+
+        font-size:5.5px !important;
+
+        padding:
+            3px
+            5px !important;
+    }
+
+
+    /* =====================================================
+       MAP STATUS
+    ===================================================== */
+
+    #ldpStage3 .ldp3-map-status{
+
+        left:9px !important;
+
+        right:9px !important;
+
+        bottom:9px !important;
+
+        padding:
+            9px 10px !important;
+
+        border-radius:12px !important;
+
+        flex-direction:row !important;
+
+        align-items:center !important;
+
+        justify-content:space-between !important;
+
+        gap:8px !important;
+    }
+
+
+    #ldpStage3 .ldp3-map-status span{
+
+        font-size:6px !important;
+    }
+
+
+    #ldpStage3 .ldp3-map-status strong{
+
+        font-size:7px !important;
+
+        text-align:right;
+    }
+
+
+    /* =====================================================
+       CORE PANEL
+    ===================================================== */
+
+    #ldpStage3 .ldp3-panel{
+
+        width:100% !important;
+
+        max-width:100% !important;
+
+        min-height:auto !important;
+
+        box-sizing:border-box !important;
+
+        padding:
+            18px !important;
+
+        border-radius:20px !important;
+
+        order:2 !important;
+    }
+
+
+    #ldpStage3 .ldp3-panel-title{
+
+        font-size:7px !important;
+
+        margin-bottom:12px !important;
+    }
+
+
+    #ldpStage3 .ldp3-panel-heading{
+
+        font-size:19px !important;
+
+        margin-bottom:6px !important;
+    }
+
+
+    #ldpStage3 .ldp3-panel-sub{
+
+        font-size:9px !important;
+
+        margin-bottom:17px !important;
+    }
+
+
+    #ldpStage3 .ldp3-network-item{
+
+        padding:
+            10px
+            0 !important;
+
+        gap:9px !important;
+    }
+
+
+    #ldpStage3 .ldp3-network-dot{
+
+        width:7px !important;
+
+        height:7px !important;
+    }
+
+
+    #ldpStage3
+    .ldp3-network-item strong{
+
+        font-size:8px !important;
+    }
+
+
+    #ldpStage3
+    .ldp3-network-item span{
+
+        font-size:6.5px !important;
+
+        margin-top:2px;
+    }
+
+
+    #ldpStage3 .ldp3-status{
+
+        margin-top:17px !important;
+
+        padding:
+            12px !important;
+
+        border-radius:13px !important;
+    }
+
+
+    #ldpStage3 .ldp3-status-label{
+
+        font-size:6px !important;
+    }
+
+
+    #ldpStage3 .ldp3-status-value{
+
+        font-size:13px !important;
+
+        margin-top:5px;
+    }
+
+
+    /* =====================================================
+       MERDEKA STRIP
+    ===================================================== */
+
+    #ldpStage3 .ldp3-merdeka{
+
+        width:100% !important;
+
+        box-sizing:border-box !important;
+
+        margin-top:14px !important;
+
+        padding:
+            12px !important;
+
+        border-radius:13px !important;
+
+        font-size:7px !important;
+
+        line-height:1.5;
+    }
+
+}
+
+
+/* =========================================================
+   EXTRA SMALL — 320 / 360 / 375 PX
+========================================================= */
+
+@media(max-width:380px){
+
+    #ldpStage3{
+
+        padding-left:8px !important;
+        padding-right:8px !important;
+    }
+
+
+    #ldpAreaOnlineV5{
+
+        font-size:7px;
+
+        gap:5px;
+
+        padding:
+            9px 6px;
+    }
+
+
+    #ldpStage3 .ldp3-map{
+
+        min-height:285px !important;
+
+        height:285px !important;
+    }
+
+
+    #ldpStage3 .ldp3-indonesia{
+
+        left:-7% !important;
+
+        width:114% !important;
+    }
+
+
+    #ldpStage3 .ldp3-node-label{
+
+        font-size:5px !important;
+
+        padding:
+            2px 4px !important;
+    }
+
+
+    #ldpStage3
+    .ldp3-network-item
+    strong{
+
+        font-size:7.5px !important;
+    }
+
+}
+
+</style>
+
+
+<script id="ldp-stage3-mobile-fix-v5-script">
+
+(function(){
+
+    "use strict";
+
+
+    function install(){
+
+        const stage =
+            document.getElementById(
+                "ldpStage3"
+            );
+
+
+        if(!stage){
+
+            return false;
+
+        }
+
+
+        /* Jangan dobel */
+
+        if(
+            document.getElementById(
+                "ldpAreaOnlineV5"
+            )
+        ){
+
+            return true;
+
+        }
+
+
+        /* =================================================
+           BUAT BAR AREA ONLINE
+        ================================================= */
+
+        const bar =
+            document.createElement(
+                "div"
+            );
+
+
+        bar.id =
+            "ldpAreaOnlineV5";
+
+
+        bar.innerHTML = `
+
+            <span class="online">
+
+                <span class="dot"></span>
+
+                NETWORK ONLINE
+
+            </span>
+
+            <span class="sep">•</span>
+
+            <span class="city highlight">
+                DEMAK
+            </span>
+
+            <span class="sep">•</span>
+
+            <span class="city">
+                SEMARANG
+            </span>
+
+            <span class="sep">•</span>
+
+            <span class="city">
+                JOGJA
+            </span>
+
+            <span class="sep">•</span>
+
+            <span class="region">
+                JAWA TENGAH & DIY
+            </span>
+
+        `;
+
+
+        /* Cari header Stage 3 */
+
+        const header =
+            stage.querySelector(
+                ".ldp3-header"
+            );
+
+
+        if(header){
+
+            header.after(bar);
+
+        }else{
+
+            stage.prepend(bar);
+
+        }
+
+
+        return true;
+
+    }
+
+
+    function start(){
+
+        if(install()){
+
+            return;
+
+        }
+
+
+        let tries = 0;
+
+
+        const timer =
+            setInterval(
+                function(){
+
+                    tries++;
+
+                    if(install()){
+
+                        clearInterval(timer);
+
+                    }
+
+
+                    if(tries >= 50){
+
+                        clearInterval(timer);
+
+                    }
+
+                },
+                200
+            );
+
+    }
+
+
+    if(
+        document.readyState ===
+        "loading"
+    ){
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            start
+        );
+
+    }else{
+
+        start();
+
+    }
+
+})();
+
+</script>
+
+<!-- =========================================================
+     END MOBILE FIX V5
+========================================================= -->
+
+<!-- =========================================================
+     LDP MOBILE PERFORMANCE MODE
+     RINGAN UNTUK HP
+     TEMPel PALING BAWAH index.html
+========================================================= -->
+
+<style id="LDP-MOBILE-LITE">
+
+@media(max-width:600px){
+
+    /* =====================================================
+       1. MATIKAN BLUR BERAT
+    ===================================================== */
+
+    *,
+    *::before,
+    *::after{
+
+        -webkit-backdrop-filter:none !important;
+        backdrop-filter:none !important;
+    }
+
+
+    nav,
+    header,
+    .package,
+    .feature,
+    .service,
+    .promo-box,
+    .contact-card,
+    .event-card,
+    .ldp2-card,
+    .ldp2-trust,
+    .ldp3-panel,
+    .ldp3-map,
+    .ldp3-map-status,
+    .ldp3-status,
+    .ldp6-contact,
+    .ldp6-faq,
+    .ldp5-package,
+    .ldp-new-card{
+
+        -webkit-backdrop-filter:none !important;
+        backdrop-filter:none !important;
+    }
+
+
+    /* =====================================================
+       2. MATIKAN BLUR FILTER
+    ===================================================== */
+
+    .hero-robot,
+    .about-robot,
+    .loader-robot,
+    .loader-glow,
+    .ldp3-island,
+    .ldp3-node,
+    .ldp3-location-new,
+    .ldpPremiumWhatsApp,
+    .ldp3-map{
+
+        filter:none !important;
+    }
+
+
+    /* =====================================================
+       3. RINGANKAN SHADOW
+    ===================================================== */
+
+    .package,
+    .feature,
+    .service,
+    .promo-box,
+    .contact-card,
+    .event-card,
+    .ldp2-card,
+    .ldp3-panel,
+    .ldp3-map,
+    .ldp3-map-status,
+    .ldp5-package,
+    .ldp-new-card{
+
+        box-shadow:
+            0 6px 18px
+            rgba(0,0,0,.20) !important;
+    }
+
+
+    /* =====================================================
+       4. MATIKAN ANIMASI BERAT
+    ===================================================== */
+
+    .hero-robot,
+    .about-robot,
+
+    .loader-orbit,
+    .loader-glow,
+    .loader-robot,
+
+    .ldp3-island,
+    .ldp3-route,
+    .ldp3-node,
+    .ldp3-location-new,
+    .ldp3-radar,
+
+    .ldp-network-scan,
+
+    .ldpPremiumWhatsApp,
+
+    .ldp2-card,
+    .ldp2-trust-item,
+
+    .ldp-new-card,
+    .ldp-new-card::after,
+    .ldp-package-header::after,
+
+    .ldp5-package,
+    .promo-border,
+    .promo-text,
+    .btn-shine{
+
+        animation:none !important;
+    }
+
+
+    /* =====================================================
+       5. MATIKAN ANIMASI BACKGROUND STAGE
+    ===================================================== */
+
+    #beranda::before,
+    #beranda::after,
+
+    #ldpStage2::before,
+    #ldpStage2::after,
+
+    #ldpStage3::before,
+    #ldpStage3::after,
+
+    #ldpStage4::before,
+    #ldpStage4::after,
+
+    #ldpStage5::before,
+    #ldpStage5::after,
+    
+    #ldpStage6::before,
+    #ldpStage6::after{
+
+        animation:none !important;
+    }
+
+
+    /* =====================================================
+       6. NETWORK MAP SUPER RINGAN
+    ===================================================== */
+
+    #ldpStage3 .ldp3-route{
+
+        animation:none !important;
+
+        opacity:.45 !important;
+    }
+
+
+    #ldpStage3 .ldp3-island{
+
+        animation:none !important;
+
+        filter:none !important;
+
+        box-shadow:none !important;
+    }
+
+
+    #ldpStage3 .ldp3-node{
+
+        animation:none !important;
+
+        box-shadow:
+            0 0 7px
+            rgba(124,34,255,.65) !important;
+    }
+
+
+    #ldpStage3 .ldp3-location-new{
+
+        animation:none !important;
+
+        box-shadow:
+            0 0 8px
+            rgba(25,237,120,.55) !important;
+    }
+
+
+    #ldpStage3 .ldp3-radar{
+
+        display:none !important;
+    }
+
+
+    #ldpStage3 .ldp-network-scan{
+
+        display:none !important;
+    }
+
+
+    /* =====================================================
+       7. MATIKAN GRID ANIMASI
+    ===================================================== */
+
+    #ldpStage3 .ldp3-map::before,
+    #ldpStage3 .ldp3-map::after{
+
+        animation:none !important;
+    }
+
+
+    /* =====================================================
+       8. HERO LEBIH RINGAN
+    ===================================================== */
+
+    .hero-robot{
+
+        filter:none !important;
+
+        animation:none !important;
+
+        box-shadow:none !important;
+    }
+
+
+    .hero-glow,
+    .hero-orb,
+    .hero-particle,
+    .hero-particles{
+
+        display:none !important;
+    }
+
+
+    /* =====================================================
+       9. LOADING RINGAN
+    ===================================================== */
+
+    .loader-orbit{
+
+        display:none !important;
+    }
+
+
+    .loader-glow{
+
+        filter:none !important;
+
+        animation:none !important;
+    }
+
+
+    .loader-robot{
+
+        filter:none !important;
+
+        animation:none !important;
+    }
+
+
+    /* =====================================================
+       10. FIREWORK / PARTICLE
+    ===================================================== */
+
+    .firework,
+    .particle,
+    .particles,
+    .spark,
+    .sparkle,
+    .confetti{
+
+        display:none !important;
+    }
+
+
+    /* =====================================================
+       11. PROMO SHINE
+    ===================================================== */
+
+    #ldpStage5 .ldp-package-grid-new::before,
+    #ldpStage5 .ldp-new-card::after,
+    #ldpStage5 .ldp-package-header::after{
+
+        display:none !important;
+
+        animation:none !important;
+    }
+
+
+    /* =====================================================
+       12. WHATSAPP BUTTON
+    ===================================================== */
+
+    .ldpPremiumWhatsApp{
+
+        animation:none !important;
+
+        filter:none !important;
+
+        box-shadow:
+            0 5px 15px
+            rgba(0,0,0,.25) !important;
+    }
+
+
+    .ldpPremiumWhatsApp svg{
+
+        filter:none !important;
+    }
+
+
+    /* =====================================================
+       13. CONTENT VISIBILITY
+       HP TIDAK MERENDER SEMUA SECTION SEKALIGUS
+    ===================================================== */
+
+    #ldpStage2,
+    #ldpStage3,
+    #ldpStage4,
+    #ldpStage5,
+    #ldpStage6{
+
+        content-visibility:auto;
+
+        contain-intrinsic-size:
+            700px;
+    }
+
+
+    /* =====================================================
+       14. KURANGI TRANSITION
+    ===================================================== */
+
+    *{
+
+        transition-duration:
+            .12s !important;
+    }
+
+
+    /* =====================================================
+       15. HILANGKAN HOVER EFFECT
+    ===================================================== */
+
+    .package:hover,
+    .feature:hover,
+    .service:hover,
+    .event-card:hover,
+    .ldp2-card:hover,
+    .ldp-new-card:hover{
+
+        transform:none !important;
+
+        filter:none !important;
+    }
+
+}
+
+
+/* =========================================================
+   EXTRA LOW POWER MODE
+   HP LEMAH / 3G / BATTERY
+========================================================= */
+
+@media(max-width:400px){
+
+    .hero-robot{
+
+        display:none !important;
+    }
+
+
+    #ldpStage3 .ldp3-route{
+
+        opacity:.30 !important;
+    }
+
+
+    #ldpStage3 .ldp3-map{
+
+        box-shadow:
+            0 5px 15px
+            rgba(0,0,0,.18) !important;
+    }
+
+
+    .ldp2-card,
+    .ldp3-panel,
+    .ldp5-package{
+
+        box-shadow:
+            0 4px 12px
+            rgba(0,0,0,.16) !important;
+    }
+
+}
+
+</style>
+
+
+<script id="LDP-MOBILE-LITE-JS">
+
+(function(){
+
+    "use strict";
+
+
+    /* =====================================================
+       MOBILE PERFORMANCE DETECTION
+    ===================================================== */
+
+    const isMobile =
+        window.matchMedia(
+            "(max-width:600px)"
+        ).matches;
+
+
+    if(!isMobile){
+
+        return;
+
+    }
+
+
+    /* =====================================================
+       MATIKAN FIREWORK YANG SUDAH ADA
+    ===================================================== */
+
+    const killFireworks =
+        document.querySelectorAll(
+            ".firework, .particle, .spark, .sparkle, .confetti"
+        );
+
+
+    killFireworks.forEach(
+        function(el){
+
+            el.remove();
+
+        }
+    );
+
+
+    /* =====================================================
+       STOP ANIMATION UNTUK ELEMENT BERAT
+    ===================================================== */
+
+    function freezeHeavy(){
+
+        const selectors = [
+
+            ".loader-orbit",
+
+            ".loader-glow",
+
+            ".loader-robot",
+
+            ".hero-robot",
+
+            ".about-robot",
+
+            ".ldp3-radar",
+
+            ".ldp-network-scan",
+
+            ".ldp3-route",
+
+            ".ldp3-island",
+
+            ".ldp3-node",
+
+            ".ldp3-location-new",
+
+            ".ldpPremiumWhatsApp"
+
+        ];
+
+
+        selectors.forEach(
+            function(selector){
+
+                document
+                    .querySelectorAll(selector)
+                    .forEach(
+                        function(el){
+
+                            el.style.animation =
+                                "none";
+
+                            el.style.filter =
+                                "none";
+
+                        }
+                    );
+
+            }
+        );
+
+    }
+
+
+    if(
+        document.readyState ===
+        "loading"
+    ){
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            freezeHeavy
+        );
+
+    }else{
+
+        freezeHeavy();
+
+    }
+
+
+})();
+
+</script>
+
+<!-- =========================================================
+     END LDP MOBILE PERFORMANCE MODE
+========================================================= -->
+
+<!-- =========================================================
+     LDP MOBILE PERFORMANCE MODE
+     RINGAN UNTUK HP
+     TEMPel PALING BAWAH index.html
+========================================================= -->
+
+
+
+
+
+
+<!-- =========================================================
+     END LDP MOBILE PERFORMANCE MODE
+========================================================= -->
+
+<!-- =========================================================
+     LDP MOBILE PERFORMANCE MODE
+     RINGAN UNTUK HP
+     TEMPel PALING BAWAH index.html
+========================================================= -->
+
+
+
+
+
+
+<!-- =========================================================
+     LDP MOBILE PERFORMANCE MODE
+     RINGAN UNTUK HP
+     TEMPel PALING BAWAH index.html
+========================================================= -->
+
+
+
+
+
+
+<!-- =========================================================
+     END LDP MOBILE PERFORMANCE MODE
+========================================================= -->
