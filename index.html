@@ -28089,3 +28089,741 @@ section{position:relative}
 }
 
 </style>
+
+<!-- =========================================================
+     LDP PREMIUM FAQ TAMBAHAN
+     AMAN — TIDAK MENGHAPUS FAQ LAMA
+========================================================= -->
+
+<style>
+
+#ldpPremiumFAQ{
+    max-width:1100px;
+    margin:0 auto;
+    padding:70px 20px;
+    position:relative;
+}
+
+#ldpPremiumFAQ .faq-head{
+    text-align:center;
+    margin-bottom:35px;
+}
+
+#ldpPremiumFAQ .faq-kicker{
+    color:#ff3048;
+    font-size:10px;
+    font-weight:1000;
+    letter-spacing:4px;
+    margin-bottom:12px;
+}
+
+#ldpPremiumFAQ h2{
+    margin:0;
+    color:#fff;
+    font-size:clamp(40px,6vw,70px);
+    font-weight:1000;
+    letter-spacing:-3px;
+}
+
+#ldpPremiumFAQ h2 span{
+    background:
+        linear-gradient(
+            90deg,
+            #ff3048,
+            #9b4dff
+        );
+
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+}
+
+#ldpPremiumFAQ .faq-sub{
+    max-width:650px;
+    margin:16px auto 0;
+    color:#918b96;
+    font-size:13px;
+    line-height:1.7;
+}
+
+
+/* CARD */
+
+#ldpPremiumFAQ .faq-card{
+
+    margin-bottom:12px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.09);
+
+    border-radius:20px;
+
+    overflow:hidden;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255,255,255,.055),
+            rgba(255,255,255,.015)
+        );
+
+    box-shadow:
+        0 18px 45px
+        rgba(0,0,0,.25);
+
+    transition:.25s ease;
+}
+
+#ldpPremiumFAQ .faq-card:hover{
+
+    border-color:
+        rgba(139,69,255,.45);
+
+    transform:
+        translateY(-2px);
+
+    box-shadow:
+        0 25px 55px
+        rgba(0,0,0,.3),
+        0 0 30px
+        rgba(124,34,255,.08);
+}
+
+
+/* QUESTION */
+
+#ldpPremiumFAQ .faq-question{
+
+    width:100%;
+
+    min-height:70px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    gap:15px;
+
+    padding:18px 22px;
+
+    border:0;
+    outline:0;
+
+    background:transparent;
+
+    color:#fff;
+
+    font-family:inherit;
+
+    font-size:14px;
+    font-weight:900;
+
+    text-align:left;
+
+    cursor:pointer;
+}
+
+#ldpPremiumFAQ .faq-left{
+
+    display:flex;
+    align-items:center;
+
+    gap:14px;
+}
+
+#ldpPremiumFAQ .faq-icon{
+
+    width:34px;
+    height:34px;
+
+    flex:none;
+
+    display:grid;
+    place-items:center;
+
+    border-radius:10px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #ff2438,
+            #813cff
+        );
+
+    color:#fff;
+
+    font-weight:1000;
+
+    box-shadow:
+        0 0 18px
+        rgba(255,36,56,.20);
+}
+
+#ldpPremiumFAQ .faq-arrow{
+
+    font-size:20px;
+
+    color:#a866ff;
+
+    transition:
+        transform .3s ease;
+}
+
+
+/* ANSWER */
+
+#ldpPremiumFAQ .faq-answer{
+
+    display:grid;
+
+    grid-template-rows:0fr;
+
+    transition:
+        grid-template-rows .3s ease;
+}
+
+#ldpPremiumFAQ .faq-answer-inner{
+
+    overflow:hidden;
+
+    min-height:0;
+
+    padding:
+        0 22px 0 70px;
+
+    color:#938d99;
+
+    font-size:12px;
+
+    line-height:1.8;
+
+    opacity:0;
+
+    transition:
+        opacity .2s ease,
+        padding .3s ease;
+}
+
+
+/* ACTIVE */
+
+#ldpPremiumFAQ .faq-card.active{
+
+    border-color:
+        rgba(255,55,78,.35);
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(229,9,24,.07),
+            rgba(124,34,255,.07)
+        );
+}
+
+#ldpPremiumFAQ .faq-card.active
+.faq-answer{
+
+    grid-template-rows:1fr;
+}
+
+#ldpPremiumFAQ .faq-card.active
+.faq-answer-inner{
+
+    padding:
+        0 22px 22px 70px;
+
+    opacity:1;
+}
+
+#ldpPremiumFAQ .faq-card.active
+.faq-arrow{
+
+    transform:
+        rotate(180deg);
+}
+
+
+/* MOBILE */
+
+@media(max-width:600px){
+
+    #ldpPremiumFAQ{
+        padding:
+            55px 14px;
+    }
+
+    #ldpPremiumFAQ h2{
+        font-size:42px;
+    }
+
+    #ldpPremiumFAQ .faq-question{
+        min-height:64px;
+        padding:15px;
+    }
+
+    #ldpPremiumFAQ .faq-left{
+        gap:10px;
+    }
+
+    #ldpPremiumFAQ .faq-icon{
+        width:30px;
+        height:30px;
+    }
+
+    #ldpPremiumFAQ .faq-answer-inner{
+        padding:
+            0 15px 0 55px;
+    }
+
+    #ldpPremiumFAQ .faq-card.active
+    .faq-answer-inner{
+        padding:
+            0 15px 18px 55px;
+    }
+
+}
+
+</style>
+
+
+<script>
+
+(function(){
+
+    function LDP_CREATE_FAQ(){
+
+        /*
+         * JANGAN BUAT DOBEL
+         */
+
+        if(
+            document.getElementById(
+                "ldpPremiumFAQ"
+            )
+        ){
+            return;
+        }
+
+
+        /*
+         * Cari Stage 6
+         */
+
+        const stage =
+            document.getElementById(
+                "ldpStage6"
+            );
+
+        if(!stage){
+            return;
+        }
+
+
+        /*
+         * Buat FAQ
+         */
+
+        const faq =
+            document.createElement(
+                "div"
+            );
+
+        faq.id =
+            "ldpPremiumFAQ";
+
+
+        faq.innerHTML = `
+
+            <div class="faq-head">
+
+                <div class="faq-kicker">
+                    LDP CUSTOMER CENTER
+                </div>
+
+                <h2>
+                    PERTANYAAN
+                    <span>UMUM</span>
+                </h2>
+
+                <div class="faq-sub">
+                    Jawaban cepat mengenai paket,
+                    pemasangan, jaringan, dan layanan
+                    PT. Lintas Data Prima.
+                </div>
+
+            </div>
+
+
+            <div class="faq-list">
+
+
+                <div class="faq-card">
+
+                    <button
+                        type="button"
+                        class="faq-question"
+                    >
+
+                        <span class="faq-left">
+
+                            <span class="faq-icon">
+                                ?
+                            </span>
+
+                            <span>
+                                Bagaimana cara
+                                berlangganan LDP?
+                            </span>
+
+                        </span>
+
+                        <span class="faq-arrow">
+                            ↓
+                        </span>
+
+                    </button>
+
+                    <div class="faq-answer">
+
+                        <div class="faq-answer-inner">
+
+                            Pilih paket internet yang
+                            sesuai, kemudian hubungi
+                            LDP melalui WhatsApp.
+                            Tim kami akan membantu
+                            proses pendaftaran dan
+                            pemasangan.
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="faq-card">
+
+                    <button
+                        type="button"
+                        class="faq-question"
+                    >
+
+                        <span class="faq-left">
+
+                            <span class="faq-icon">
+                                ?
+                            </span>
+
+                            <span>
+                                Paket internet apa saja
+                                yang tersedia?
+                            </span>
+
+                        </span>
+
+                        <span class="faq-arrow">
+                            ↓
+                        </span>
+
+                    </button>
+
+                    <div class="faq-answer">
+
+                        <div class="faq-answer-inner">
+
+                            Paket yang tersedia dapat
+                            dilihat pada bagian paket
+                            Merdeka LDP, termasuk pilihan
+                            35 Mbps, 50 Mbps, dan
+                            100 Mbps.
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="faq-card">
+
+                    <button
+                        type="button"
+                        class="faq-question"
+                    >
+
+                        <span class="faq-left">
+
+                            <span class="faq-icon">
+                                ?
+                            </span>
+
+                            <span>
+                                Bagaimana cara cek
+                                ketersediaan jaringan?
+                            </span>
+
+                        </span>
+
+                        <span class="faq-arrow">
+                            ↓
+                        </span>
+
+                    </button>
+
+                    <div class="faq-answer">
+
+                        <div class="faq-answer-inner">
+
+                            Hubungi customer support
+                            LDP melalui WhatsApp untuk
+                            pengecekan ketersediaan
+                            jaringan di lokasi Anda.
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="faq-card">
+
+                    <button
+                        type="button"
+                        class="faq-question"
+                    >
+
+                        <span class="faq-left">
+
+                            <span class="faq-icon">
+                                ?
+                            </span>
+
+                            <span>
+                                Apakah bisa konsultasi
+                                sebelum memilih paket?
+                            </span>
+
+                        </span>
+
+                        <span class="faq-arrow">
+                            ↓
+                        </span>
+
+                    </button>
+
+                    <div class="faq-answer">
+
+                        <div class="faq-answer-inner">
+
+                            Bisa. Kamu dapat menghubungi
+                            LDP melalui WhatsApp untuk
+                            bertanya mengenai paket,
+                            kebutuhan internet, dan
+                            ketersediaan jaringan.
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="faq-card">
+
+                    <button
+                        type="button"
+                        class="faq-question"
+                    >
+
+                        <span class="faq-left">
+
+                            <span class="faq-icon">
+                                ?
+                            </span>
+
+                            <span>
+                                Untuk kebutuhan apa saja
+                                internet LDP bisa digunakan?
+                            </span>
+
+                        </span>
+
+                        <span class="faq-arrow">
+                            ↓
+                        </span>
+
+                    </button>
+
+                    <div class="faq-answer">
+
+                        <div class="faq-answer-inner">
+
+                            Internet dapat digunakan untuk
+                            browsing, streaming, gaming,
+                            bekerja, belajar, video call,
+                            dan berbagai aktivitas digital
+                            sehari-hari.
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="faq-card">
+
+                    <button
+                        type="button"
+                        class="faq-question"
+                    >
+
+                        <span class="faq-left">
+
+                            <span class="faq-icon">
+                                ?
+                            </span>
+
+                            <span>
+                                Bagaimana cara menghubungi
+                                customer support LDP?
+                            </span>
+
+                        </span>
+
+                        <span class="faq-arrow">
+                            ↓
+                        </span>
+
+                    </button>
+
+                    <div class="faq-answer">
+
+                        <div class="faq-answer-inner">
+
+                            Tekan tombol WhatsApp pada
+                            website untuk langsung
+                            terhubung dengan customer
+                            support PT. Lintas Data Prima.
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+        `;
+
+
+        /*
+         * Masukkan sebelum footer.
+         */
+
+        const footer =
+            stage.querySelector(
+                ".ldp6-footer"
+            );
+
+
+        if(footer){
+
+            footer.parentNode.insertBefore(
+                faq,
+                footer
+            );
+
+        }
+        else{
+
+            stage.appendChild(
+                faq
+            );
+
+        }
+
+
+        /*
+         * AKTIFKAN FAQ
+         */
+
+        faq
+        .querySelectorAll(
+            ".faq-question"
+        )
+        .forEach(
+            function(button){
+
+                button.addEventListener(
+                    "click",
+                    function(){
+
+                        const card =
+                            button.closest(
+                                ".faq-card"
+                            );
+
+
+                        const opened =
+                            card.classList.contains(
+                                "active"
+                            );
+
+
+                        faq
+                        .querySelectorAll(
+                            ".faq-card"
+                        )
+                        .forEach(
+                            function(other){
+
+                                other.classList.remove(
+                                    "active"
+                                );
+
+                            }
+                        );
+
+
+                        if(!opened){
+
+                            card.classList.add(
+                                "active"
+                            );
+
+                        }
+
+                    }
+                );
+
+            }
+        );
+
+    }
+
+
+    if(
+        document.readyState ===
+        "loading"
+    ){
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            LDP_CREATE_FAQ
+        );
+
+    }
+    else{
+
+        LDP_CREATE_FAQ();
+
+    }
+
+})();
+
+</script>
