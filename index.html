@@ -2397,6 +2397,199 @@ footer a:hover{
 }
 </style>
 
+
+<style id="LDP-FINAL-MOBILE-MAP-FIX">
+/* =========================================================
+   LDP FINAL MOBILE MAP FIX
+   DESKTOP TIDAK DIUBAH
+========================================================= */
+
+@media (max-width:600px){
+
+  /* Keep the Stage 3 map compact on phones */
+  #ldpStage3 .ldp3-map{
+    position:relative !important;
+    height:305px !important;
+    min-height:305px !important;
+    overflow:hidden !important;
+  }
+
+  /*
+    Mobile-only coordinates.
+    Desktop coordinates remain untouched.
+  */
+
+  /* JOGJA */
+  #ldpStage3 .ldp3-node[data-location="JOGJA"]{
+    left:18% !important;
+    top:72% !important;
+  }
+
+  /* SOLO */
+  #ldpStage3 .ldp3-node[data-location="SOLO"]{
+    left:31% !important;
+    top:60% !important;
+  }
+
+  /* DEMAK */
+  #ldpStage3 .ldp3-node[data-location="DEMAK"]{
+    left:54% !important;
+    top:43% !important;
+  }
+
+  /* POP MIJEN */
+  #ldpStage3 .ldp3-node[data-location="POP MIJEN"]{
+    left:70% !important;
+    top:31% !important;
+  }
+
+  /* POP WONOSALAM */
+  #ldpStage3 .ldp3-node[data-location="POP WONOSALAM"]{
+    left:69% !important;
+    top:60% !important;
+  }
+
+  /* JEPARA */
+  #ldpStage3 .ldp3-node[data-location="JEPARA"]{
+    left:78% !important;
+    top:21% !important;
+  }
+
+  /* SEMARANG */
+  #ldpStage3 .ldp3-node[data-location="SEMARANG"]{
+    left:84% !important;
+    top:43% !important;
+  }
+
+  /* Smaller nodes, but still clearly visible */
+  #ldpStage3 .ldp3-node,
+  #ldpStage3 .ldp3-location-new{
+    width:9px !important;
+    height:9px !important;
+    box-sizing:border-box !important;
+  }
+
+  #ldpStage3 .ldp3-node-label{
+    font-size:6px !important;
+    padding:3px 5px !important;
+    line-height:1.15 !important;
+    white-space:nowrap !important;
+    max-width:92px !important;
+    overflow:hidden !important;
+    text-overflow:ellipsis !important;
+    transform:translateX(-50%) !important;
+  }
+
+  /* Prevent the map status strip from covering nodes */
+  #ldpStage3 .ldp3-map-status{
+    left:9px !important;
+    right:9px !important;
+    bottom:8px !important;
+  }
+
+  /* The new online-area strip uses the real LDP locations */
+  #ldpAreaOnlineV5{
+    width:calc(100% - 20px) !important;
+    margin:0 auto 15px !important;
+    padding:9px 7px !important;
+    gap:6px !important;
+    font-size:7px !important;
+    letter-spacing:.45px !important;
+  }
+
+}
+
+/* Extra-small phones */
+@media (max-width:380px){
+
+  #ldpStage3 .ldp3-map{
+    height:285px !important;
+    min-height:285px !important;
+  }
+
+  #ldpStage3 .ldp3-node{
+    width:8px !important;
+    height:8px !important;
+  }
+
+  #ldpStage3 .ldp3-node-label{
+    font-size:5.5px !important;
+    padding:2px 4px !important;
+    max-width:78px !important;
+  }
+
+}
+</style>
+
+<script id="LDP-FINAL-MOBILE-MAP-FIX-JS">
+(function(){
+  "use strict";
+
+  /*
+   * Fallback for the current map markup.
+   * If data-location attributes are absent, identify nodes
+   * from their visible label and apply the mobile position.
+   */
+  function applyMobilePositions(){
+    if(!window.matchMedia("(max-width:600px)").matches) return;
+
+    const stage = document.getElementById("ldpStage3");
+    if(!stage) return;
+
+    const positions = {
+      "JOGJA":       ["18%","72%"],
+      "SOLO":        ["31%","60%"],
+      "DEMAK":       ["54%","43%"],
+      "POP MIJEN":   ["70%","31%"],
+      "POP WONOSALAM":["69%","60%"],
+      "JEPARA":      ["78%","21%"],
+      "SEMARANG":    ["84%","43%"]
+    };
+
+    const nodes = stage.querySelectorAll(
+      ".ldp3-node, .ldp3-location-new"
+    );
+
+    nodes.forEach(function(node){
+      let name = node.getAttribute("data-location") || "";
+      const label = node.querySelector(".ldp3-node-label");
+
+      if(!name && label){
+        name = label.textContent.trim().toUpperCase();
+      }
+
+      name = name.replace(/\s+/g," ").trim();
+
+      Object.keys(positions).forEach(function(key){
+        if(name === key || name.indexOf(key) !== -1){
+          node.style.left = positions[key][0];
+          node.style.top  = positions[key][1];
+        }
+      });
+    });
+  }
+
+  function start(){
+    applyMobilePositions();
+
+    let count = 0;
+    const timer = setInterval(function(){
+      applyMobilePositions();
+      count++;
+      if(count >= 15) clearInterval(timer);
+    }, 250);
+  }
+
+  if(document.readyState === "loading"){
+    document.addEventListener("DOMContentLoaded", start);
+  }else{
+    start();
+  }
+
+  window.addEventListener("resize", applyMobilePositions, {passive:true});
+})();
+</script>
+
 </head>
 <body>
 <!-- =======================================================
