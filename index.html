@@ -2590,6 +2590,146 @@ footer a:hover{
 })();
 </script>
 
+
+<style id="LDP-MOBILE-MAP-ACTUAL-FIX-V2">
+/* =========================================================
+   ACTUAL MOBILE MAP FIX V2
+   Desktop untouched.
+   Mobile uses the real .ldp-network-location nodes.
+========================================================= */
+
+@media (max-width:600px){
+
+  /* The first 7-node system duplicates the later network-location system.
+     Keep the richer network-location system on phones. */
+  #ldpStage3 .ldp3-location-new{
+    display:none !important;
+  }
+
+  #ldpStage3 .ldp-network-location{
+    display:block !important;
+    transform:translate(-50%,-50%) !important;
+    width:9px !important;
+    height:9px !important;
+    z-index:20 !important;
+  }
+
+  #ldpStage3 .ldp-network-location::before{
+    inset:-4px !important;
+    border-width:1px !important;
+  }
+
+  #ldpStage3 .ldp-network-location::after{
+    display:none !important;
+  }
+
+  #ldpStage3 .ldp-network-location-label{
+    font-size:5.5px !important;
+    line-height:1.1 !important;
+    padding:3px 4px !important;
+    border-radius:5px !important;
+    white-space:nowrap !important;
+    max-width:72px !important;
+    overflow:hidden !important;
+    text-overflow:ellipsis !important;
+    transform:translateX(-50%) !important;
+    margin-left:0 !important;
+  }
+
+  /* A deliberate mobile layout: spread the network across the map
+     instead of compressing all locations into the center. */
+
+  #ldpStage3 .ldp-network-location[data-ldp-city="BOGOR"]{left:15% !important;top:52% !important}
+  #ldpStage3 .ldp-network-location[data-ldp-city="BEKASI"]{left:22% !important;top:43% !important}
+  #ldpStage3 .ldp-network-location[data-ldp-city="BANDUNG"]{left:27% !important;top:63% !important}
+  #ldpStage3 .ldp-network-location[data-ldp-city="CIREBON"]{left:39% !important;top:46% !important}
+
+  #ldpStage3 .ldp-network-location[data-ldp-city="JEPARA"]{left:58% !important;top:30% !important}
+  #ldpStage3 .ldp-network-location[data-ldp-city="DEMAK"]{left:62% !important;top:42% !important}
+  #ldpStage3 .ldp-network-location[data-ldp-city="POP MIJEN"]{left:52% !important;top:50% !important}
+  #ldpStage3 .ldp-network-location[data-ldp-city="POP WONOSALAM"]{left:67% !important;top:57% !important}
+  #ldpStage3 .ldp-network-location[data-ldp-city="SEMARANG"]{left:77% !important;top:42% !important}
+
+  #ldpStage3 .ldp-network-location[data-ldp-city="SOLO"]{left:47% !important;top:69% !important}
+  #ldpStage3 .ldp-network-location[data-ldp-city="JOGJA"]{left:33% !important;top:78% !important}
+
+  #ldpStage3 .ldp-network-location[data-ldp-city="MADIUN"]{left:61% !important;top:72% !important}
+  #ldpStage3 .ldp-network-location[data-ldp-city="KEDIRI"]{left:70% !important;top:76% !important}
+  #ldpStage3 .ldp-network-location[data-ldp-city="MALANG"]{left:80% !important;top:83% !important}
+  #ldpStage3 .ldp-network-location[data-ldp-city="SURABAYA"]{left:74% !important;top:66% !important}
+  #ldpStage3 .ldp-network-location[data-ldp-city="BANYUWANGI"]{left:91% !important;top:85% !important}
+
+  /* Make the actual map area use the available phone width. */
+  #ldpStage3 .ldp3-map{
+    width:100% !important;
+    height:305px !important;
+    min-height:305px !important;
+    overflow:hidden !important;
+  }
+
+  #ldpStage3 .ldp3-indonesia{
+    left:-4% !important;
+    width:108% !important;
+  }
+}
+
+@media (max-width:380px){
+  #ldpStage3 .ldp3-map{
+    height:285px !important;
+    min-height:285px !important;
+  }
+
+  #ldpStage3 .ldp-network-location{
+    width:8px !important;
+    height:8px !important;
+  }
+
+  #ldpStage3 .ldp-network-location-label{
+    font-size:5px !important;
+    padding:2px 3px !important;
+    max-width:65px !important;
+  }
+}
+</style>
+
+<script id="LDP-MOBILE-MAP-ACTUAL-FIX-V2-JS">
+(function(){
+  "use strict";
+
+  function tagAndFix(){
+    if(!window.matchMedia("(max-width:600px)").matches) return;
+
+    const stage = document.getElementById("ldpStage3");
+    if(!stage) return;
+
+    stage.querySelectorAll(".ldp-network-location").forEach(function(node){
+      const label = node.querySelector(".ldp-network-location-label");
+      if(!label) return;
+
+      const city = label.textContent.trim().toUpperCase().replace(/\s+/g," ");
+      node.setAttribute("data-ldp-city", city);
+    });
+  }
+
+  function run(){
+    tagAndFix();
+
+    let n = 0;
+    const timer = setInterval(function(){
+      tagAndFix();
+      n++;
+      if(n >= 20) clearInterval(timer);
+    },250);
+  }
+
+  if(document.readyState === "loading"){
+    document.addEventListener("DOMContentLoaded", run);
+  }else{
+    run();
+  }
+})();
+</script>
+
 </head>
 <body>
 <!-- =======================================================
